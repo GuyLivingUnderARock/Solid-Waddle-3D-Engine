@@ -119,6 +119,7 @@ std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
 	return vertexes;
 }
 
+#pragma region ViewCam
 float ViewCam::CalcFocalDist() {
 	return std::sqrt(std::powf(((WINDOW_WIDTH / 2) * std::sin(90)) / (std::sin(fov / 2)), 2) + std::powf(WINDOW_WIDTH / 2, 2));
 }
@@ -126,7 +127,9 @@ float ViewCam::CalcFocalDist() {
 void ViewCam::Move(Point3D moveBy) {
 	position += moveBy;
 }
+#pragma endregion
 
+#pragma region Mesh2D
 Mesh2D Mesh3D::ConvertTo2DMesh(ViewCam cam, float renderScale) {
 	Mesh2D mesh;
 	mesh.colour = colour;
@@ -164,7 +167,73 @@ void Mesh3D::Move(Point3D moveBy) {
 		}
 	}
 }
+#pragma endregion
 
+#pragma region Engine3D
+void Engine3D::InitSDL() {
+	windowFlags = SDL_WINDOW_SHOWN;
+	rendererFlags = SDL_RENDERER_ACCELERATED || SDL_RENDERER_PRESENTVSYNC;
+
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+		printf("Couldn't initialize SDL: %s\n", SDL_GetError());
+		exit(1);
+	}
+
+	window = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, windowFlags);
+	if (!window) {
+		printf("Failed to open %d x %d window: %s\n", WINDOW_WIDTH, WINDOW_HEIGHT, SDL_GetError());
+		exit(1);
+	}
+
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+
+	renderer = SDL_CreateRenderer(window, -1, rendererFlags);
+	if (!renderer) {
+		printf("Failed to create renderer: %s\n", SDL_GetError());
+		exit(1);
+	}
+}
+
+void Engine3D::SetRenderDrawColour(Colour colour) {
+	SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.alpha);
+}
+
+void Engine3D::Draw() {
+	SetRenderDrawColour(clearColour);
+	SDL_RenderClear(renderer);
+
+	for (auto& mesh : meshes) {
+		Mesh2D mesh2D = mesh.ConvertTo2DMesh(cam, renderScale);
+
+		SetRenderDrawColour(mesh.colour);
+		
+		for (auto& triangle : mesh2D.triangles) {
+			#pragma region Draw Wireframes
+			SDL_FPoint point_arr[4];
+			int arr_size = std::end(point_arr) - std::begin(point_arr);
+
+			for (int i = 0; i < arr_size; i++) {
+				if (i == 3) {
+					point_arr[i] = triangle.points[0];
+				}
+				else {
+					point_arr[i] = triangle.points[i];
+				}
+			}
+
+			SDL_RenderDrawLinesF(renderer, point_arr, arr_size);
+			#pragma endregion
+
+			//std::vector<SDL_Vertex> verts = triangle.ConvertToSDL_Vertex();
+			//SDL_RenderGeometry(renderer, nullptr, verts.data(), verts.size(), nullptr, 0);
+		}
+	}
+
+	SDL_RenderPresent(renderer);
+}
+#pragma endregion
+
+#pragma region Primatives
 Cubeoid::Cubeoid(Engine3D& engine3D, Point3D centre = Point3D{ 0, 0, 0 }, Point3D size_ = Point3D{ 1, 1, 1 }) {
 	Point3D size = size_;
 
@@ -258,3 +327,4 @@ Cubeoid::Cubeoid(Engine3D& engine3D, Point3D centre = Point3D{ 0, 0, 0 }, Point3
 	Triangle3D triangle_back2{ triangle_points_vector };
 	triangles.emplace_back(triangle_back2);
 }
+#pragma endregion

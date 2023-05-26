@@ -163,6 +163,10 @@ public:
 	ViewCam cam;
 
 	std::vector<Mesh3D> meshes;
+
+	void InitSDL();
+	void SetRenderDrawColour(Colour clearColour);
+	void Draw();
 };
 
 #pragma region PrimitiveMeshes
