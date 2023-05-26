@@ -53,12 +53,9 @@ void EventHandle(App& app) {
 			Point3D place_pos = Point3D{ float(event.motion.x), float(event.motion.y), 1 }; // Placement position @ (X, Y, Z)
 			Point3D size = Point3D{ 1, 1, 1 } * 100;
 
-			std::cout << "Cum 1" << "\n";
+			//place_pos = Point3D{ 0, 0, 1 } * size;
 
-			place_pos = Point3D{ 0, 0, 1 } * size;
 			app.meshes.emplace_back(Cubeoid(app, place_pos, size));
-
-			std::cout << "Cum 2" << "\n";
 
 			if (currentMesh == nullptr) {
 				meshIndex = app.meshes.size() - 1;
@@ -121,13 +118,13 @@ void Draw(App& app) {
 
 	for (auto& mesh: app.meshes) {
 		Mesh2D mesh2D = mesh.ConvertTo2DMesh(app.cam, app.renderScale);
+
 		SetRenderDrawColour(app.renderer, mesh.colour);
 		if (currentMesh == &mesh) {
 			SetRenderDrawColour(app.renderer, Colour(Colours::RED));
 		}
 
 		for (auto& triangle: mesh2D.triangles) {
-			
 			SDL_FPoint point_arr[4];
 			int arr_size = std::end(point_arr) - std::begin(point_arr);
 
@@ -142,9 +139,9 @@ void Draw(App& app) {
 
 			SDL_RenderDrawLinesF(app.renderer, point_arr, arr_size);
 			
-			std::vector<SDL_Vertex> verts = triangle.ConvertToSDL_Vertex();
+			//std::vector<SDL_Vertex> verts = triangle.ConvertToSDL_Vertex();
 
-			SDL_RenderGeometry(app.renderer, nullptr, verts.data(), verts.size(), nullptr, 0);
+			//SDL_RenderGeometry(app.renderer, nullptr, verts.data(), verts.size(), nullptr, 0);
 		}
 	}
 
