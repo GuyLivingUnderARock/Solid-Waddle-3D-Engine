@@ -165,7 +165,7 @@ void Mesh3D::Move(Point3D moveBy) {
 	}
 }
 
-Cubeoid::Cubeoid(App& app, Point3D centre = Point3D{ 0, 0, 0 }, Point3D size_ = Point3D{ 1, 1, 1 }) {
+Cubeoid::Cubeoid(Engine3D& engine3D, Point3D centre = Point3D{ 0, 0, 0 }, Point3D size_ = Point3D{ 1, 1, 1 }) {
 	Point3D size = size_;
 
 	Point3D point_A { -0.5, -0.5, -0.5 }; // Point A on a Cube

@@ -145,7 +145,7 @@ public:
 };
 #pragma endregion
 
-struct App {
+struct Engine3D {
 public:
 	SDL_Window* window = nullptr;
 	SDL_Renderer* renderer = nullptr;
@@ -168,7 +168,7 @@ public:
 #pragma region PrimitiveMeshes
 struct Cubeoid : Mesh3D {
 public:
-	Cubeoid(App& app, Point3D centre, Point3D size);
+	Cubeoid(Engine3D& engine3D, Point3D centre, Point3D size);
 };
 
 #pragma endregion
