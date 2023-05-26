@@ -113,7 +113,7 @@ std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
 
 	for (auto& point: points) {
 		vertexes.emplace_back();
-		vertexes[vertexes.size() - 1].position = *point;
+		vertexes[vertexes.size() - 1].position = point;
 	}
 
 	return vertexes;
@@ -135,8 +135,8 @@ Mesh2D Mesh3D::ConvertTo2DMesh(ViewCam cam, float renderScale) {
 		mesh.triangles.emplace_back();
 
 		for (int p = 0; p < triangles[t].points.size(); p++) {
-			mesh.points.emplace_back(triangles[t].points[p]->ConvertToSDL_FPoint(cam.CalcFocalDist(), renderScale, cam.position, cam.rotation));
-			mesh.triangles[t].points.emplace_back(&mesh.points[mesh.points.size() - 1]);
+			mesh.points.emplace_back(triangles[t].points[p].ConvertToSDL_FPoint(cam.CalcFocalDist(), renderScale, cam.position, cam.rotation));
+			mesh.triangles[t].points.emplace_back(mesh.points[mesh.points.size() - 1]);
 		}
 	}
 
@@ -149,7 +149,7 @@ Point3D Mesh3D::AverageCentre() {
 
 	for (auto& triangle: triangles) {
 		for (auto& point : triangle.points) {
-			avgPoint += *point;
+			avgPoint += point;
 			numPoints++;
 		}
 	}
@@ -160,7 +160,7 @@ Point3D Mesh3D::AverageCentre() {
 void Mesh3D::Move(Point3D moveBy) {
 	for (auto& triangle: triangles) {
 		for (auto& point : triangle.points) {
-			*point += moveBy;
+			point += moveBy;
 		}
 	}
 }
@@ -208,53 +208,53 @@ Cubeoid::Cubeoid(App& app, Point3D centre = Point3D{ 0, 0, 0 }, Point3D size_ = 
 	point_H += centre;
 	points.emplace_back(point_H);
 
-	std::vector<Point3D*> triangle_points_vector;
+	std::vector<Point3D> triangle_points_vector;
 	
-	triangle_points_vector = { &points[0], &points[1], &points[5] };
+	triangle_points_vector = { points[0], points[1], points[5] };
 	Triangle3D triangle_front1{ triangle_points_vector };
 	triangles.emplace_back(triangle_front1);
 
-	triangle_points_vector = { &points[0], &points[4], &points[5] };
+	triangle_points_vector = { points[0], points[4], points[5] };
 	Triangle3D triangle_front2{ triangle_points_vector };
 	triangles.emplace_back(triangle_front2);
 
-	triangle_points_vector = { &points[1], &points[2], &points[3] };
+	triangle_points_vector = { points[1], points[2], points[3] };
 	Triangle3D triangle_bottom1{ triangle_points_vector };
 	triangles.emplace_back(triangle_bottom1);
 
-	triangle_points_vector = { &points[1], &points[0], &points[3] };
+	triangle_points_vector = { points[1], points[0], points[3] };
 	Triangle3D triangle_bottom2{ triangle_points_vector };
 	triangles.emplace_back(triangle_bottom2);
 
-	triangle_points_vector = { &points[4], &points[5], &points[6] };
+	triangle_points_vector = { points[4], points[5], points[6] };
 	Triangle3D triangle_top1{ triangle_points_vector };
 	triangles.emplace_back(triangle_top1);
 
-	triangle_points_vector = { &points[4], &points[7], &points[6] };
+	triangle_points_vector = { points[4], points[7], points[6] };
 	Triangle3D triangle_top2{ triangle_points_vector };
 	triangles.emplace_back(triangle_top2);
 
-	triangle_points_vector = { &points[4], &points[0], &points[3] };
+	triangle_points_vector = { points[4], points[0], points[3] };
 	Triangle3D triangle_left1{ triangle_points_vector };
 	triangles.emplace_back(triangle_left1);
 
-	triangle_points_vector = { &points[3], &points[7], &points[3] };
+	triangle_points_vector = { points[3], points[7], points[3] };
 	Triangle3D triangle_left2{ triangle_points_vector };
 	triangles.emplace_back(triangle_left2);
 
-	triangle_points_vector = { &points[1], &points[2], &points[6] };
+	triangle_points_vector = { points[1], points[2], points[6] };
 	Triangle3D triangle_right1{ triangle_points_vector };
 	triangles.emplace_back(triangle_right1);
 
-	triangle_points_vector = { &points[1], &points[5], &points[6] };
+	triangle_points_vector = { points[1], points[5], points[6] };
 	Triangle3D triangle_right2{ triangle_points_vector };
 	triangles.emplace_back(triangle_right2);
 
-	triangle_points_vector = { &points[7], &points[6], &points[2] };
+	triangle_points_vector = { points[7], points[6], points[2] };
 	Triangle3D triangle_back1{ triangle_points_vector };
 	triangles.emplace_back(triangle_back1);
 
-	triangle_points_vector = { &points[7], &points[3], &points[2] };
+	triangle_points_vector = { points[7], points[3], points[2] };
 	Triangle3D triangle_back2{ triangle_points_vector };
 	triangles.emplace_back(triangle_back2);
 }

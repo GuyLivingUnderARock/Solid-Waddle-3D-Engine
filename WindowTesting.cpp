@@ -127,25 +127,24 @@ void Draw(App& app) {
 		}
 
 		for (auto& triangle: mesh2D.triangles) {
+			
 			SDL_FPoint point_arr[4];
 			int arr_size = std::end(point_arr) - std::begin(point_arr);
 
 			for (int i = 0; i < arr_size; i++) {
 				if (i == 3) {
-					point_arr[i] = *triangle.points[0];
+					point_arr[i] = triangle.points[0];
 				}
 				else {
-					point_arr[i] = *triangle.points[i];
+					point_arr[i] = triangle.points[i];
 				}
 			}
 
 			SDL_RenderDrawLinesF(app.renderer, point_arr, arr_size);
-
-			/*
+			
 			std::vector<SDL_Vertex> verts = triangle.ConvertToSDL_Vertex();
 
 			SDL_RenderGeometry(app.renderer, nullptr, verts.data(), verts.size(), nullptr, 0);
-			*/
 		}
 	}
 

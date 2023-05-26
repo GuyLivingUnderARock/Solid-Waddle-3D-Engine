@@ -106,14 +106,19 @@ struct ViewCam {
 struct Triangle2D
 {
 public:
-	std::vector<SDL_FPoint*> points;
+	// For some DUMB FUCKING REASON I don't know why,
+	// but I can't use a vector of SDL_FPoint references, reference_wrappers, or even pointers
+	// like, WTF why does it explode the Process memory from 3 or 4 MB to 16 or 17 GB!!!!
+	// YTAF??
+	std::vector<SDL_FPoint> points;
 
 	std::vector<SDL_Vertex> ConvertToSDL_Vertex();
 };
 
 struct Triangle3D {
 public:
-	std::vector<Point3D*> points;
+	// Same dumb shit here.
+	std::vector<Point3D> points;
 };
 #pragma endregion
 
