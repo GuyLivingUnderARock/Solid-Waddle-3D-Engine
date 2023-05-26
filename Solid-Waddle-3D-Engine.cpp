@@ -15,8 +15,10 @@ SDL_Event event;
 Mesh3D* currentMesh = nullptr;
 int meshIndex = -1;
 
+// Handles SDL events such as keyboard and mouse input
 void EventHandle(Engine3D& engine3D) {
-	SDL_WaitEvent(&event);
+	//SDL_WaitEvent(&event); // Pauses program and waits
+	SDL_PollEvent(&event); // Uses much more CPU
 
 	switch (event.type) {
 	case SDL_MOUSEBUTTONDOWN:
