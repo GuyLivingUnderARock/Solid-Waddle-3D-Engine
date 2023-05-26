@@ -82,6 +82,7 @@ void EventHandle(Engine3D& engine3D) {
 	}
 }
 
+// Updates game logic
 void Update() {
 	
 }
@@ -96,7 +97,7 @@ int main(int argc, char** argv) {
 		EventHandle(engine3D);
 
 		Update();
-
+		
 		engine3D.Draw();
 	}
 

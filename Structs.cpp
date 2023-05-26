@@ -194,8 +194,8 @@ void Engine3D::InitSDL() {
 	}
 }
 
-void Engine3D::SetRenderDrawColour(Colour colour) {
-	SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.alpha);
+void Engine3D::SetRenderDrawColour(SDL_Colour colour) {
+	SDL_SetRenderDrawColor(renderer, colour.r, colour.g, colour.b, colour.a);
 }
 
 void Engine3D::Draw() {

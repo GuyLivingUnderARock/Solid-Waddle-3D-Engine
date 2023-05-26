@@ -14,48 +14,44 @@ enum Colours {
 	BLUE
 };
 
-struct Colour {
-public:
-	unsigned int r = 255;
-	unsigned int g = 255;
-	unsigned int b = 255;
-	unsigned int alpha = 255;
+SDL_Color Colour(Colours colour) {
+	SDL_Color sdl_colour;
 
-	Colour(Colours colour) {
-		switch (colour) {
-		case Colours::WHITE:
-			r = 255;
-			g = 255;
-			b = 255;
-			alpha = 255;
-			break;
-		case Colours::BLACK:
-			r = 0;
-			g = 0;
-			b = 0;
-			alpha = 255;
-			break;
-		case Colours::RED:
-			r = 255;
-			g = 0;
-			b = 0;
-			alpha = 255;
-			break;
-		case Colours::GREEN:
-			r = 0;
-			g = 255;
-			b = 0;
-			alpha = 255;
-			break;
-		case Colours::BLUE:
-			r = 0;
-			g = 0;
-			b = 255;
-			alpha = 255;
-			break;
-		}
+	switch (colour) {
+	case Colours::WHITE:
+		sdl_colour.r = 255;
+		sdl_colour.g = 255;
+		sdl_colour.b = 255;
+		sdl_colour.a = 255;
+		break;
+	case Colours::BLACK:
+		sdl_colour.r = 0;
+		sdl_colour.g = 0;
+		sdl_colour.b = 0;
+		sdl_colour.a = 255;
+		break;
+	case Colours::RED:
+		sdl_colour.r = 255;
+		sdl_colour.g = 0;
+		sdl_colour.b = 0;
+		sdl_colour.a = 255;
+		break;
+	case Colours::GREEN:
+		sdl_colour.r = 0;
+		sdl_colour.g = 255;
+		sdl_colour.b = 0;
+		sdl_colour.a = 255;
+		break;
+	case Colours::BLUE:
+		sdl_colour.r = 0;
+		sdl_colour.g = 0;
+		sdl_colour.b = 255;
+		sdl_colour.a = 255;
+		break;
 	}
-};
+
+	return sdl_colour;
+}
 #pragma endregion
 
 struct Point3D {
@@ -130,7 +126,7 @@ public:
 struct Mesh2D
 {
 public:
-	Colour colour = Colour(Colours::BLUE);
+	SDL_Colour colour = Colour(Colours::BLUE);
 
 	std::vector<SDL_FPoint> points;
 	std::vector<Triangle2D> triangles;
@@ -138,7 +134,7 @@ public:
 
 struct Mesh3D {
 public:
-	Colour colour = Colour(Colours::BLUE);
+	SDL_Colour colour = Colour(Colours::BLUE);
 
 	std::vector<Point3D> points;
 	std::vector<Triangle3D> triangles;
@@ -161,7 +157,7 @@ public:
 	Uint32 windowFlags = 0;
 
 	const char* windowName = "Window 01";
-	Colour clearColour = Colour(Colours::WHITE); // Colour that the renderer fills with to clear the screen
+	SDL_Colour clearColour = Colour(Colours::WHITE); // Colour that the renderer fills with to clear the screen
 
 	bool fullscreen = false; // Unimplemented
 	int frameCount, timerFPS, lastFrame, fps; // Unimplemented
@@ -173,7 +169,7 @@ public:
 	// Initalizes SDL components i.e. The window and renderer
 	void InitSDL();
 	// Sets the colour the renderer is drawing or clearing with
-	void SetRenderDrawColour(Colour clearColour);
+	void SetRenderDrawColour(SDL_Colour clearColour);
 	// Draws all meshes in the 3D engine
 	void Draw();
 };
