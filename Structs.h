@@ -96,7 +96,7 @@ struct ViewCam {
 	Point3D rotation;
 
 	float fov = 60;
-	float move_scale = 1;
+	float move_scale = 10;
 
 	float CalcFocalDist();
 	void Move(Point3D moveBy);
