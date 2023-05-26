@@ -88,7 +88,6 @@ int main(int argc, char** argv) {
 	Engine3D engine3D = Engine3D(); // Holds the SDL_Window and SDL_Renderer
 
 	engine3D.InitSDL();
-	SDL_RenderSetScale(engine3D.renderer, engine3D.renderScale, engine3D.renderScale);
 
 	running = true;
 	while (running) {

@@ -93,7 +93,7 @@ Point3D& Point3D::operator /=(Point3D& point) {
 }
 #pragma endregion
 
-SDL_FPoint Point3D::ConvertToSDL_FPoint(float focalDistance, float renderScale, Point3D camPosition, Point3D camRotation) {
+SDL_FPoint Point3D::ConvertToSDL_FPoint(float focalDistance, Point3D camPosition, Point3D camRotation) {
 	SDL_FPoint point;
 
 	float h_x = std::sqrt(std::pow(z + camPosition.z + focalDistance, 2) + std::pow(x - camPosition.x, 2));
@@ -102,8 +102,8 @@ SDL_FPoint Point3D::ConvertToSDL_FPoint(float focalDistance, float renderScale, 
 	float angle_x = std::asin((x - camPosition.x) / h_x);
 	float angle_y = std::asin((y + camPosition.y) / h_y);
 
-	point.x = ((h_x * (z + camPosition.z + focalDistance) / focalDistance) * std::sin(angle_x)) + ((WINDOW_WIDTH/renderScale)/2);
-	point.y = ((h_y * (z + camPosition.z + focalDistance) / focalDistance) * std::sin(angle_y)) + ((WINDOW_HEIGHT/renderScale)/2);
+	point.x = h_x * std::sin(angle_x) * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_WIDTH/2;
+	point.y = h_y * std::sin(angle_y) * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
 
 	return point;
 }
@@ -130,7 +130,7 @@ void ViewCam::Move(Point3D moveBy) {
 #pragma endregion
 
 #pragma region Mesh2D
-Mesh2D Mesh3D::ConvertTo2DMesh(ViewCam cam, float renderScale) {
+Mesh2D Mesh3D::ConvertTo2DMesh(ViewCam cam) {
 	Mesh2D mesh;
 	mesh.colour = colour;
 
@@ -138,7 +138,7 @@ Mesh2D Mesh3D::ConvertTo2DMesh(ViewCam cam, float renderScale) {
 		mesh.triangles.emplace_back();
 
 		for (int p = 0; p < triangles[t].points.size(); p++) {
-			mesh.points.emplace_back(triangles[t].points[p].ConvertToSDL_FPoint(cam.CalcFocalDist(), renderScale, cam.position, cam.rotation));
+			mesh.points.emplace_back(triangles[t].points[p].ConvertToSDL_FPoint(cam.CalcFocalDist(), cam.position, cam.rotation));
 			mesh.triangles[t].points.emplace_back(mesh.points[mesh.points.size() - 1]);
 		}
 	}
@@ -203,7 +203,7 @@ void Engine3D::Draw() {
 	SDL_RenderClear(renderer);
 
 	for (auto& mesh : meshes) {
-		Mesh2D mesh2D = mesh.ConvertTo2DMesh(cam, renderScale);
+		Mesh2D mesh2D = mesh.ConvertTo2DMesh(cam);
 
 		SetRenderDrawColour(mesh.colour);
 		
