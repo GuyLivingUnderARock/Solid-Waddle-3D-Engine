@@ -3,6 +3,46 @@
 #include "Defs.h"
 #include "Structs.h"
 
+
+SDL_Colour Colour(Colours colour) {
+	SDL_Colour sdl_colour = SDL_Colour();
+
+	switch (colour) {
+	case Colours::WHITE:
+		sdl_colour.r = 255;
+		sdl_colour.g = 255;
+		sdl_colour.b = 255;
+		sdl_colour.a = 255;
+		break;
+	case Colours::BLACK:
+		sdl_colour.r = 0;
+		sdl_colour.g = 0;
+		sdl_colour.b = 0;
+		sdl_colour.a = 255;
+		break;
+	case Colours::RED:
+		sdl_colour.r = 255;
+		sdl_colour.g = 0;
+		sdl_colour.b = 0;
+		sdl_colour.a = 255;
+		break;
+	case Colours::GREEN:
+		sdl_colour.r = 0;
+		sdl_colour.g = 255;
+		sdl_colour.b = 0;
+		sdl_colour.a = 255;
+		break;
+	case Colours::BLUE:
+		sdl_colour.r = 0;
+		sdl_colour.g = 0;
+		sdl_colour.b = 255;
+		sdl_colour.a = 255;
+		break;
+	}
+
+	return sdl_colour;
+}
+
 #pragma region Point3D Operator Overides
 Point3D& Point3D::operator +(float a) {
 	x += a;
@@ -124,7 +164,7 @@ float ViewCam::CalcFocalDist() {
 	return std::sqrt(std::powf(((WINDOW_WIDTH / 2) * std::sin(90)) / (std::sin(fov / 2)), 2) + std::powf(WINDOW_WIDTH / 2, 2));
 }
 
-void ViewCam::Move(Point3D moveBy) {
+void ViewCam::MoveBy(Point3D moveBy) {
 	position += moveBy;
 }
 #pragma endregion
@@ -234,8 +274,9 @@ void Engine3D::Draw() {
 #pragma endregion
 
 #pragma region Primatives
-Cubeoid::Cubeoid(Engine3D& engine3D, Point3D centre = Point3D{ 0, 0, 0 }, Point3D size_ = Point3D{ 1, 1, 1 }) {
-	Point3D size = size_;
+Cubeoid::Cubeoid(Engine3D& engine3D, Point3D centre_, Point3D size, SDL_Colour colour_) {
+	colour = colour_;
+	Point3D centre { -centre_.x, -centre_.y, centre_.z };
 
 	Point3D point_A { -0.5, -0.5, -0.5 }; // Point A on a Cube
 	point_A *= size;

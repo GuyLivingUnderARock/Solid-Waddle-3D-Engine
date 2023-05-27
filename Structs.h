@@ -5,7 +5,6 @@
 #include "SDL.h"
 
 
-#pragma region Colours
 enum Colours {
 	WHITE,
 	BLACK,
@@ -14,45 +13,7 @@ enum Colours {
 	BLUE
 };
 
-SDL_Color Colour(Colours colour) {
-	SDL_Color sdl_colour;
-
-	switch (colour) {
-	case Colours::WHITE:
-		sdl_colour.r = 255;
-		sdl_colour.g = 255;
-		sdl_colour.b = 255;
-		sdl_colour.a = 255;
-		break;
-	case Colours::BLACK:
-		sdl_colour.r = 0;
-		sdl_colour.g = 0;
-		sdl_colour.b = 0;
-		sdl_colour.a = 255;
-		break;
-	case Colours::RED:
-		sdl_colour.r = 255;
-		sdl_colour.g = 0;
-		sdl_colour.b = 0;
-		sdl_colour.a = 255;
-		break;
-	case Colours::GREEN:
-		sdl_colour.r = 0;
-		sdl_colour.g = 255;
-		sdl_colour.b = 0;
-		sdl_colour.a = 255;
-		break;
-	case Colours::BLUE:
-		sdl_colour.r = 0;
-		sdl_colour.g = 0;
-		sdl_colour.b = 255;
-		sdl_colour.a = 255;
-		break;
-	}
-
-	return sdl_colour;
-}
-#pragma endregion
+SDL_Colour Colour(Colours colour);
 
 struct Point3D {
 public:
@@ -98,7 +59,7 @@ struct ViewCam {
 	// Returns the distance the virtua camera is from the screen using the fov
 	float CalcFocalDist();
 	// Additively changes the position of the view port in the world space
-	void Move(Point3D moveBy);
+	void MoveBy(Point3D moveBy);
 };
 
 #pragma region Triangles
@@ -177,7 +138,8 @@ public:
 #pragma region PrimitiveMeshes
 struct Cubeoid : Mesh3D {
 public:
-	Cubeoid(Engine3D& engine3D, Point3D centre, Point3D size);
+	Cubeoid(Engine3D& engine3D, Point3D centre_ = Point3D{ 0, 0, 0 }, Point3D size = Point3D{ 1, 1, 1 },
+		SDL_Colour colour_ = Colour(Colours::BLUE));
 };
 
 #pragma endregion
