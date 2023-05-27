@@ -372,6 +372,20 @@ void Engine3D::Draw() {
 
 	SDL_RenderPresent(renderer);
 }
+
+void Engine3D::FrameCalcs() {
+	frameCount++;
+
+	fps = frameCount / (fpsTimer.getTicks() / 1000.0f); // Average frames per second
+
+	deltaTime = deltaTimer.getTicks() / 1000.0f;
+	deltaTimer.restart();
+
+	if (fpsTimer.getTicks() / 1000.0f >= frameStep) {
+		frameCount = 0;
+		fpsTimer.restart();
+	}
+}
 #pragma endregion
 
 #pragma region Primatives

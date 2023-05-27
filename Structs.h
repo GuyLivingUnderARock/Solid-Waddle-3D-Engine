@@ -154,8 +154,12 @@ public:
 
 	bool fullscreen = false; // Unimplemented
 
-	int frameCount; // Frames loaded since starting
+	float frameStep = 1.5f;
+
+	int frameCount; // Frames loaded since last frame step
 	LTimer fpsTimer; // Time since start
+	float fps; // 
+
 	LTimer deltaTimer;
 	float deltaTime; // Time taken for the last frame
 
@@ -169,6 +173,8 @@ public:
 	void SetRenderDrawColour(SDL_Colour clearColour);
 	// Draws all meshes in the 3D engine
 	void Draw();
+
+	void FrameCalcs();
 };
 
 #pragma region PrimitiveMeshes

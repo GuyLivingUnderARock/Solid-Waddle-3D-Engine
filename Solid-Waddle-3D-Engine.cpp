@@ -103,11 +103,6 @@ int main(int argc, char** argv) {
 
 	running = true;
 	while (running) {
-		if (engine3D.fpsTimer.getTicks() / 1000.0f >= 1.0f) {
-			engine3D.frameCount = 0;
-			engine3D.fpsTimer.restart();
-		}
-
 		EventHandle(engine3D);
 
 		//std::cout << engine3D.cam.position.x << ", " << engine3D.cam.position.y << ", " << engine3D.cam.position.z << "\n";
@@ -117,11 +112,7 @@ int main(int argc, char** argv) {
 		
 		engine3D.Draw();
 
-		engine3D.frameCount++;
-		float avgFPS = engine3D.frameCount / (engine3D.fpsTimer.getTicks() / 1000.0f); // Average frames per second
-
-		engine3D.deltaTime = engine3D.deltaTimer.getTicks() / 1000.0f;
-		engine3D.deltaTimer.restart();
+		engine3D.FrameCalcs();
 	}
 
 	SDL_DestroyRenderer(engine3D.renderer);
