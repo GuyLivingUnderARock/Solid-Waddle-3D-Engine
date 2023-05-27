@@ -50,6 +50,12 @@ void EventHandle(Engine3D& engine3D) {
 		case SDLK_0:
 			engine3D.cam.position = Point3D{ 0, 0, 0 };
 			break;
+		case SDLK_UP:
+			engine3D.cam.fov += 5;
+			break;
+		case SDLK_DOWN:
+			engine3D.cam.fov -= 5;
+			break;
 		}
 		break;
 	case SDL_KEYDOWN:
@@ -103,6 +109,9 @@ int main(int argc, char** argv) {
 		}
 
 		EventHandle(engine3D);
+
+		//std::cout << engine3D.cam.position.x << ", " << engine3D.cam.position.y << ", " << engine3D.cam.position.z << "\n";
+		std::cout << engine3D.cam.fov << "\n";
 
 		Update();
 		

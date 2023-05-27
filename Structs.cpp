@@ -260,7 +260,7 @@ std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
 
 #pragma region ViewCam
 float ViewCam::CalcFocalDist() {
-	return std::sqrt(std::powf(((WINDOW_WIDTH / 2) * std::sin(90)) / (std::sin(fov / 2)), 2) + std::powf(WINDOW_WIDTH / 2, 2));
+	return std::sqrt(std::pow((WINDOW_WIDTH / 2) / (std::sin( (fov*PI/180) / 2)), 2) + std::pow(WINDOW_WIDTH / 2, 2));
 }
 
 void ViewCam::MoveBy(Point3D moveBy) {
