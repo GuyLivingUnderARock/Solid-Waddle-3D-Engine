@@ -5,6 +5,38 @@
 #include "SDL.h"
 
 
+//The application time based timer
+struct LTimer {
+public:
+	//Initializes variables
+	LTimer();
+
+	//The various clock actions
+	void start();
+	void stop();
+	void pause();
+	void unpause();
+	void restart();
+
+	//Gets the timer's time
+	Uint32 getTicks();
+
+	//Checks the status of the timer
+	bool isStarted();
+	bool isPaused();
+
+private:
+	//The clock time when the timer started
+	Uint32 mStartTicks;
+
+	//The ticks stored when the timer was paused
+	Uint32 mPausedTicks;
+
+	//The timer status
+	bool mPaused;
+	bool mStarted;
+};
+
 enum Colours {
 	WHITE,
 	BLACK,
@@ -54,7 +86,7 @@ struct ViewCam {
 	Point3D rotation;
 
 	float fov = 60;
-	float move_scale = 10;
+	float move_scale = 150;
 
 	// Returns the distance the virtua camera is from the screen using the fov
 	float CalcFocalDist();
@@ -121,7 +153,11 @@ public:
 	SDL_Colour clearColour = Colour(Colours::WHITE); // Colour that the renderer fills with to clear the screen
 
 	bool fullscreen = false; // Unimplemented
-	int frameCount, timerFPS, lastFrame, fps; // Unimplemented
+
+	int frameCount; // Frames loaded since starting
+	LTimer fpsTimer; // Time since start
+	LTimer deltaTimer;
+	float deltaTime; // Time taken for the last frame
 
 	ViewCam cam; // The view port in the 3D engine
 

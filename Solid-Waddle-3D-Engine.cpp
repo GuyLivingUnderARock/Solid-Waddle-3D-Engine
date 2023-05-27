@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <ctime>
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -54,22 +55,22 @@ void EventHandle(Engine3D& engine3D) {
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
 		case SDLK_w:
-			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, 0, 1 } * engine3D.cam.move_scale);
+			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, 0, 1 } * engine3D.deltaTime);
 			break;
 		case SDLK_s:
-			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, 0, -1 } * engine3D.cam.move_scale);
+			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, 0, -1 } * engine3D.deltaTime);
 			break;
 		case SDLK_d:
-			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 1, 0, 0 } * engine3D.cam.move_scale);
+			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 1, 0, 0 } * engine3D.deltaTime);
 			break;
 		case SDLK_a:
-			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ -1, 0, 0 } * engine3D.cam.move_scale);
+			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ -1, 0, 0 } * engine3D.deltaTime);
 			break;
 		case SDLK_e:
-			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, 1, 0 } * engine3D.cam.move_scale);
+			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, 1, 0 } * engine3D.deltaTime);
 			break;
 		case SDLK_q:
-			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, -1, 0 } * engine3D.cam.move_scale);
+			if (engine3D.meshes.size() != 0) engine3D.cam.MoveBy(Point3D{ 0, -1, 0 } * engine3D.deltaTime);
 			break;
 		}
 		break;
@@ -89,13 +90,29 @@ int main(int argc, char** argv) {
 
 	engine3D.InitSDL();
 
+	// Start fps counter
+	engine3D.frameCount = 0;
+	engine3D.fpsTimer.start();
+	engine3D.deltaTimer.start();
+
 	running = true;
 	while (running) {
+		if (engine3D.fpsTimer.getTicks() / 1000.0f >= 1.0f) {
+			engine3D.frameCount = 0;
+			engine3D.fpsTimer.restart();
+		}
+
 		EventHandle(engine3D);
 
 		Update();
 		
 		engine3D.Draw();
+
+		engine3D.frameCount++;
+		float avgFPS = engine3D.frameCount / (engine3D.fpsTimer.getTicks() / 1000.0f); // Average frames per second
+
+		engine3D.deltaTime = engine3D.deltaTimer.getTicks() / 1000.0f;
+		engine3D.deltaTimer.restart();
 	}
 
 	SDL_DestroyRenderer(engine3D.renderer);
