@@ -105,9 +105,6 @@ int main(int argc, char** argv) {
 	while (running) {
 		EventHandle(engine3D);
 
-		//std::cout << engine3D.cam.position.x << ", " << engine3D.cam.position.y << ", " << engine3D.cam.position.z << "\n";
-		std::cout << engine3D.cam.fov << "\n";
-
 		Update();
 		
 		engine3D.Draw();

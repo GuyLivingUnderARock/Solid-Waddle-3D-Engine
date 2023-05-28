@@ -235,18 +235,8 @@ Point3D& Point3D::operator /=(Point3D& point) {
 SDL_FPoint Point3D::ConvertToSDL_FPoint(float focalDistance, Point3D camPosition, Point3D camRotation) {
 	SDL_FPoint point;
 
-	float h_x = std::sqrt(std::pow(z + camPosition.z + focalDistance, 2) + std::pow(x - camPosition.x, 2));
-	float h_y = std::sqrt(std::pow(z + camPosition.z + focalDistance, 2) + std::pow(y + camPosition.y, 2));
-
-	float angle_x = std::asin((x - camPosition.x) / h_x);
-	float angle_y = std::asin((y + camPosition.y) / h_y);
-
-	point.x = h_x * std::sin(angle_x) * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_WIDTH/2;
-	point.y = h_y * std::sin(angle_y) * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
-
-point.x = x * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
-
-point.y = y * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
+	point.x = (x - camPosition.x) * focalDistance / (z - camPosition.z + focalDistance) + WINDOW_WIDTH/2;
+	point.y = (y + camPosition.y) * focalDistance / (z - camPosition.z + focalDistance) + WINDOW_HEIGHT/2;
 
 	return point;
 }
