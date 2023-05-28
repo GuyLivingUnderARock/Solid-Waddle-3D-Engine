@@ -85,8 +85,8 @@ struct ViewCam {
 	Point3D position;
 	Point3D rotation;
 
-	float fov = 90;
-	float move_scale = 500;
+	float fov = 60;
+	float move_scale = 5000;
 
 	// Returns the distance the virtua camera is from the screen using the fov
 	float CalcFocalDist();
