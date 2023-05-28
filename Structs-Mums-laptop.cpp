@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include "Defs.h"
 #include "Structs.h"
@@ -242,22 +243,12 @@ Point2D Point3D::ConvertToPoint2D(float focalDistance, Point3D camPosition, Poin
 	return point;
 }
 
-std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
-	std::vector<SDL_Vertex> vertexes;
-
-	for (auto& point: points) {
-		vertexes.emplace_back();
-		vertexes[vertexes.size() - 1].position = point.sdl_point;
-	}
-
-	return vertexes;
-}
-
+// Questionable Results
 Point3D Point3D::ConvertToPoint3D(Point2D point2D, float focalDistance, Point3D camPosition, Point3D camRotation) {
 	Point3D point3D;
 
-	point3D.x = point2D.sdl_point.x / (focalDistance / (point2D.z + focalDistance));
-	point3D.y = point2D.sdl_point.y / (focalDistance / (point2D.z + focalDistance));
+	point3D.x = point2D.sdl_point.x / (focalDistance / (point2D.z - camPosition.z + focalDistance)) + camPosition.x;
+	point3D.y = point2D.sdl_point.y / (focalDistance / (point2D.z - camPosition.z + focalDistance)) - camPosition.y;
 	point3D.z = point2D.z;
 
 	return point3D;
@@ -265,6 +256,17 @@ Point3D Point3D::ConvertToPoint3D(Point2D point2D, float focalDistance, Point3D 
 
 float Point3D::Distance(Point3D point) {
 	return std::sqrt(std::pow(x - point.x, 2) + std::pow(y - point.y, 2) + std::pow(z - point.z, 2));
+}
+
+std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
+	std::vector<SDL_Vertex> vertexes;
+
+	for (auto& point : points) {
+		vertexes.emplace_back();
+		vertexes[vertexes.size() - 1].position = point.sdl_point;
+	}
+
+	return vertexes;
 }
 
 #pragma region ViewCam
@@ -358,31 +360,35 @@ void Engine3D::Draw() {
 		SetRenderDrawColour(mesh.colour);
 		
 		for (auto& triangle : mesh2D.triangles) {
-			#pragma region Draw Wireframes
+			/*#pragma region Draw Wireframes
 			SDL_FPoint point_arr[4];
+			int arr_size = std::end(point_arr) - std::begin(point_arr);
 
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < arr_size; i++) {
 				if (i == 3) {
-					point_arr[i] = triangle.points[0].sdl_point;
+					point_arr[i] = triangle.points[0];
 				}
 				else {
-					point_arr[i] = triangle.points[i].sdl_point;
+					point_arr[i] = triangle.points[i];
 				}
 			}
 
-			SDL_RenderDrawLinesF(renderer, point_arr, 4);
-			#pragma endregion
-			 /*
+			SDL_RenderDrawLinesF(renderer, point_arr, arr_size);
+			#pragma endregion */
+
 			std::vector<SDL_Vertex> verts = triangle.ConvertToSDL_Vertex();
 			
 			for (int i = 0; i < verts.size(); i++) {
 				float dist = cam.position.Distance(Point3D::ConvertToPoint3D(triangle.points[i], cam.CalcFocalDist(), cam.position, cam.rotation));
 				verts[i].color = SDL_Colour{ 255, 255, 255, (unsigned char)(int)(std::tanh(dist) * 255) };
-				std::cout << (std::string)cam.position << " - " << (std::string)Point3D::ConvertToPoint3D(triangle.points[i], cam.CalcFocalDist(), cam.position, cam.rotation) << dist << "\n";
+
+				Point3D pt_t = Point3D::ConvertToPoint3D(triangle.points[i], cam.CalcFocalDist(), cam.position, cam.rotation);
+
+				std::cout << cam.position.x << ", " << cam.position.y << ", " << cam.position.z << " - " 
+					<< pt_t.x << ", " << pt_t.y << ", " << pt_t.z << " - " << dist << "\n";
 			}
 
 			SDL_RenderGeometry(renderer, nullptr, verts.data(), verts.size(), nullptr, 0);
-			*/
 		}
 	}
 
