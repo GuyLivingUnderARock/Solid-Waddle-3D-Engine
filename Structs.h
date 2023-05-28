@@ -47,6 +47,12 @@ enum Colours {
 
 SDL_Colour Colour(Colours colour);
 
+struct Point2D {
+public:
+	SDL_FPoint sdl_point;
+	float z;
+};
+
 struct Point3D {
 public:
 	float x = 0;
@@ -78,7 +84,10 @@ public:
 	Point3D& operator /=(Point3D& point);
 
 	// Returns a 2D point conversion of this 3D point
-	SDL_FPoint ConvertToSDL_FPoint(float focalDistance, Point3D camPosition, Point3D camRotation);
+	Point2D ConvertToPoint2D(float focalDistance, Point3D camPosition, Point3D camRotation);
+	// Returns a 3D point conversion of this 2D point
+	static Point3D ConvertToPoint3D(Point2D point2D, float focalDistance, Point3D camPosition, Point3D camRotation);
+	float Distance(Point3D point);
 };
 
 struct ViewCam {
@@ -102,7 +111,7 @@ public:
 	// but I can't use a vector of SDL_FPoint references, reference_wrappers, or even pointers
 	// like, WTF why does it explode the Process memory from 3 or 4 MB to 16 or 17 GB!!!!
 	// YTAF??
-	std::vector<SDL_FPoint> points;
+	std::vector<Point2D> points;
 
 	// Returns the 2D points of the triangle as SDL vertexes
 	std::vector<SDL_Vertex> ConvertToSDL_Vertex();
@@ -121,7 +130,7 @@ struct Mesh2D
 public:
 	SDL_Colour colour = Colour(Colours::BLUE);
 
-	std::vector<SDL_FPoint> points;
+	std::vector<Point2D> points;
 	std::vector<Triangle2D> triangles;
 };
 
@@ -150,7 +159,7 @@ public:
 	Uint32 windowFlags = 0;
 
 	const char* windowName = "Window 01";
-	SDL_Colour clearColour = Colour(Colours::WHITE); // Colour that the renderer fills with to clear the screen
+	SDL_Colour clearColour = Colour(Colours::BLACK); // Colour that the renderer fills with to clear the screen
 
 	bool fullscreen = false; // Unimplemented
 
