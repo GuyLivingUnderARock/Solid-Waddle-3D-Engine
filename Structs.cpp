@@ -244,6 +244,10 @@ SDL_FPoint Point3D::ConvertToSDL_FPoint(float focalDistance, Point3D camPosition
 	point.x = h_x * std::sin(angle_x) * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_WIDTH/2;
 	point.y = h_y * std::sin(angle_y) * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
 
+point.x = x * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
+
+point.y = y * (z + camPosition.z + focalDistance) / focalDistance + WINDOW_HEIGHT/2;
+
 	return point;
 }
 
