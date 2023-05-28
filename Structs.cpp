@@ -232,39 +232,39 @@ Point3D& Point3D::operator /=(Point3D& point) {
 }
 #pragma endregion
 
-Point2D Point3D::ConvertToPoint2D(float focalDistance, Point3D camPosition, Point3D camRotation) {
-	Point2D point;
+SDL_FPoint Point3D::ConvertToPoint2D(float focalDistance, Point3D camPosition, Point3D camRotation) {
+	SDL_FPoint point;
 
-	point.sdl_point.x = (x - camPosition.x) * focalDistance / (z - camPosition.z + focalDistance) + WINDOW_WIDTH/2;
-	point.sdl_point.y = (y + camPosition.y) * focalDistance / (z - camPosition.z + focalDistance) + WINDOW_HEIGHT/2;
-	point.z = z;
+	point.x = (x - camPosition.x) * focalDistance / (z - camPosition.z + focalDistance) + WINDOW_WIDTH/2;
+	point.y = (y + camPosition.y) * focalDistance / (z - camPosition.z + focalDistance) + WINDOW_HEIGHT/2;
 
 	return point;
 }
 
-std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
-	std::vector<SDL_Vertex> vertexes;
-
-	for (auto& point: points) {
-		vertexes.emplace_back();
-		vertexes[vertexes.size() - 1].position = point.sdl_point;
-	}
-
-	return vertexes;
-}
-
-Point3D Point3D::ConvertToPoint3D(Point2D point2D, float focalDistance, Point3D camPosition, Point3D camRotation) {
+Point3D Point3D::ConvertToPoint3D(SDL_FPoint point2D, float z, float focalDistance, Point3D camPosition, Point3D camRotation) {
 	Point3D point3D;
 
-	point3D.x = point2D.sdl_point.x / (focalDistance / (point2D.z + focalDistance));
-	point3D.y = point2D.sdl_point.y / (focalDistance / (point2D.z + focalDistance));
-	point3D.z = point2D.z;
+	// Doesn't work!!
+	point3D.x = camPosition.x + (point2D.x - (WINDOW_WIDTH  / 2)) / (focalDistance / (z - camPosition.z + focalDistance));
+	point3D.y = camPosition.y - (point2D.y - (WINDOW_HEIGHT / 2)) / (focalDistance / (z - camPosition.z + focalDistance));
+	point3D.z = z;
 
 	return point3D;
 }
 
 float Point3D::Distance(Point3D point) {
 	return std::sqrt(std::pow(x - point.x, 2) + std::pow(y - point.y, 2) + std::pow(z - point.z, 2));
+}
+
+std::vector<SDL_Vertex> Triangle2D::ConvertToSDL_Vertex() {
+	std::vector<SDL_Vertex> vertexes;
+
+	for (auto& point : points) {
+		vertexes.emplace_back();
+		vertexes[vertexes.size() - 1].position = point;
+	}
+
+	return vertexes;
 }
 
 #pragma region ViewCam
@@ -277,7 +277,7 @@ void ViewCam::MoveBy(Point3D moveBy) {
 }
 #pragma endregion
 
-#pragma region Mesh2D
+#pragma region Mesh3D
 Mesh2D Mesh3D::ConvertTo2DMesh(ViewCam cam) {
 	Mesh2D mesh;
 	mesh.colour = colour;
@@ -363,10 +363,10 @@ void Engine3D::Draw() {
 
 			for (int i = 0; i < 4; i++) {
 				if (i == 3) {
-					point_arr[i] = triangle.points[0].sdl_point;
+					point_arr[i] = triangle.points[0];
 				}
 				else {
-					point_arr[i] = triangle.points[i].sdl_point;
+					point_arr[i] = triangle.points[i];
 				}
 			}
 
