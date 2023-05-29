@@ -23,26 +23,10 @@ void EventHandle(Engine3D& engine3D) {
 	case SDL_MOUSEBUTTONDOWN:
 		switch (event.button.button) {
 		case SDL_BUTTON_LEFT:
-			// Rember to convert float(event.motion.x), float(event.motion.y) to a 3D point properly
 			Point3D place_pos = Point3D::ConvertToPoint3D( SDL_FPoint{ float(event.motion.x), float(event.motion.y) }, engine3D.cam.position.z + 1, engine3D.cam.CalcFocalDist(), engine3D.cam.position, engine3D.cam.rotation); // Placement position @ (X, Y, Z)
 			Point3D size = Point3D{ 1, 1, 1 } * 100;
 
 			engine3D.meshes.emplace_back(Cubeoid(engine3D, place_pos, size, Colour(BLUE)));
-			
-			/*place_pos = Point3D{ 0, 0, 1 } * size;
-			engine3D.meshes.emplace_back(Cubeoid(engine3D, place_pos, size, Colour(BLUE)));
-
-			place_pos = Point3D{ -2, 0, 1 } * size;
-			engine3D.meshes.emplace_back(Cubeoid(engine3D, place_pos, size, Colour(RED)));
-
-			place_pos = Point3D{ 2, 0, 1 } *size;
-			engine3D.meshes.emplace_back(Cubeoid(engine3D, place_pos, size, Colour(RED)));
-
-			place_pos = Point3D{ 0, 2, 1 } * size;
-			engine3D.meshes.emplace_back(Cubeoid(engine3D, place_pos, size, Colour(GREEN)));
-
-			place_pos = Point3D{ 0, -2, 1 } * size;
-			engine3D.meshes.emplace_back(Cubeoid(engine3D, place_pos, size, Colour(GREEN)));*/
 
 			break;
 		}

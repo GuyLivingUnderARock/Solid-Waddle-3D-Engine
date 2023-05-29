@@ -245,7 +245,7 @@ Point3D Point3D::ConvertToPoint3D(SDL_FPoint point2D, float z, float focalDistan
 	Point3D point3D;
 
 	// Doesn't work!!
-	point3D.x = camPosition.x + (point2D.x - (WINDOW_WIDTH  / 2)) / (focalDistance / (z - camPosition.z + focalDistance));
+	point3D.x = -camPosition.x - (point2D.x - (WINDOW_WIDTH  / 2)) / (focalDistance / (z - camPosition.z + focalDistance));
 	point3D.y = camPosition.y - (point2D.y - (WINDOW_HEIGHT / 2)) / (focalDistance / (z - camPosition.z + focalDistance));
 	point3D.z = z;
 
