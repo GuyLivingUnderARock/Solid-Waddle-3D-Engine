@@ -4,8 +4,8 @@
 #include <ctime>
 
 #include "SDL.h"
-#include "SDL_image.h"
-#include "SDL_render.h"
+//#include "SDL_image.h"
+//#include "SDL_render.h"
 
 #include "Defs.h"
 #include "Structs.h"
